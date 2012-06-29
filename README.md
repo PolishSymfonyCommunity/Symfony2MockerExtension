@@ -24,6 +24,8 @@ Add the extension to your composer.json:
 Replace the base container class for test environment in `app/AppKernel.php`:
 
 ```php
+<?php
+
 /**
  * @return string
  */
@@ -59,6 +61,8 @@ services:
 ### Implementing the ServiceMockerAwareInterface ###
 
 ```php
+<?php
+
 namespace PSS\Features\Context;
 
 use Behat\Behat\Context\BehatContext;
@@ -100,6 +104,8 @@ class AcmeContext extends BehatContext implements ServiceMockerAwareInterface
 ### Extending the RawServiceMockerContext ###
 
 ```php
+<?php
+
 namespace PSS\Features\Context;
 
 use PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker
@@ -128,6 +134,8 @@ Extending `ServiceMockerContext` is not recommended as it can only be extend onc
 Most of the time you'd rather want to include it as a subcontext:
 
 ```php
+<?php
+
 namespace PSS\Features\Context;
 
 use Behat\Behat\Context\BehatContext;
@@ -150,6 +158,8 @@ provides a step to verify Mockery expectations. Most of the time you'd want to
 use it internally in other steps:
 
 ```php
+<?php
+
 /**
  * @Given /^(the )?contact request should be sent to (the )?CRM$/
  *
@@ -181,6 +191,8 @@ Feature: Submitting contact request form
 ```
 
 ```php
+<?php
+
 namespace PSS\Features\Context;
 
 use Behat\Behat\Context\BehatContext;
