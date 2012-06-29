@@ -16,6 +16,6 @@ class ServiceMockerContext extends RawServiceMockerContext
      */
     public function theServiceShouldMeetMyExpectations($serviceId)
     {
-        $this->getServiceMocker()->verifyServiceExpectations($service);
+        $this->getServiceMocker()->verifyServiceExpectations($serviceId);
     }
 }
