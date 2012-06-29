@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="pss.behat.symfony2_mockery_extension.service_mocker.class">PSS\Behat\Symfony2MockerExtension\ServiceMocker</parameter>
+        <parameter key="pss.behat.symfony2_mockery_extension.context.initializer.class">PSS\Behat\Symfony2MockerExtension\Context\Initializer\ServiceMockerInitializer</parameter>
+    </parameters>
+
+    <services>
+        <service id="pss.behat.symfony2_mockery_extension.service_mocker" class="%pss.behat.symfony2_mockery_extension.service_mocker.class%">
+            <argument type="service" id="behat.symfony2_extension.kernel" />
+            <argument type="service" id="behat.mink" />
+        </service>
+
+        <service id="pss.behat.symfony2_mockery_extension.context.initializer" class="%pss.behat.symfony2_mockery_extension.context.initializer.class%">
+            <argument type="service" id="pss.behat.symfony2_mockery_extension.service_mocker" />
+            <tag name="behat.context.initializer" />
+            <tag name="behat.event_subscriber" priority="0" />
+        </service>
+    </services>
+</container>
