@@ -141,7 +141,7 @@ namespace PSS\Features\Context;
 use Behat\Behat\Context\BehatContext;
 use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerContext;
 
-class AcmeContext extends RawServiceMockerContext
+class FeatureContext extends RawServiceMockerContext
 {
     /**
      * @return null
