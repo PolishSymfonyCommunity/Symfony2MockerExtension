@@ -6,40 +6,46 @@
 Behat extension for mocking services defined in the Symfony2 dependency
 injection container.
 
-Internally it uses [Mockery](https://github.com/padraic/mockery) and [SymfonyMockerContainer](https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer)).
+Internally it uses [Mockery](https://github.com/padraic/mockery) and [SymfonyMockerContainer](https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer).
 
 Installation
 ------------
 
 Add the extension to your composer.json:
 
-    {
-        "require": {
-            "polishsymfonycommunity/symfony2-mocker-extension": "*"
-        }
+```js
+{
+    "require": {
+        "polishsymfonycommunity/symfony2-mocker-extension": "*"
     }
+}
+```
 
 Replace the base container class for test environment in `app/AppKernel.php`:
 
-    /**
-     * @return string
-     */
-    protected function getContainerBaseClass()
-    {
-        if ('test' == $this->environment) {
-            return '\PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer';
-        }
-
-        return parent::getContainerBaseClass();
+```php
+/**
+ * @return string
+ */
+protected function getContainerBaseClass()
+{
+    if ('test' == $this->environment) {
+        return '\PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer';
     }
+
+    return parent::getContainerBaseClass();
+}
+```
 
 Clear your cache.
 
-Enable the extension in your behat.yml:
+Enable the extension in your `behat.yml`:
 
-    default:
-      extensions:
-        PSS\Behat\Symfony2MockerExtension\Extension:
+```yaml
+default:
+  extensions:
+    PSS\Behat\Symfony2MockerExtension\Extension:
+```
 
 Usage
 -----
@@ -50,8 +56,7 @@ services:
 * Extend the `RawServiceMockerContext`
 * Use `ServiceMockerContext`
 
-Implementing the ServiceMockerAwareInterface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Implementing the ServiceMockerAwareInterface ###
 
 ```php
 namespace PSS\Features\Context;
@@ -92,8 +97,7 @@ class AcmeContext extends BehatContext implements ServiceMockerAwareInterface
 }
 ```
 
-Extending the RawServiceMockerContext
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Extending the RawServiceMockerContext ###
 
 ```php
 namespace PSS\Features\Context;
@@ -117,10 +121,9 @@ class AcmeContext extends RawServiceMockerContext
 }
 ```
 
-Using ServiceMockerContext
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Using ServiceMockerContext ###
 
-Extending ServiceMockerContext is not recommended as it can only be extend once.
+Extending `ServiceMockerContext` is not recommended as it can only be extend once.
 
 Most of the time you'd rather want to include it as a subcontext:
 
@@ -142,19 +145,20 @@ class AcmeContext extends RawServiceMockerContext
 }
 ```
 
-`ServiceMockerContext` provides a step to verify Mockery expectations.
-Most of the time you'd want to use it internally in other steps:
+`ServiceMockerContext` can be used just like `RawServiceMockerContext` but it additionally 
+provides a step to verify Mockery expectations. Most of the time you'd want to
+use it internally in other steps:
 
 ```php
-    /**
-     * @Given /^(the )?contact request should be sent to (the )?CRM$/
-     *
-     * @return null
-     */
-    public function theContactRequestShouldBeSentToCrm()
-    {
-        return new Then(sprintf('the "%s" service should meet my expectations', 'crm.client'));
-    }
+/**
+ * @Given /^(the )?contact request should be sent to (the )?CRM$/
+ *
+ * @return null
+ */
+public function theContactRequestShouldBeSentToCrm()
+{
+    return new Then(sprintf('the "%s" service should meet my expectations', 'crm.client'));
+}
 ```
 
 Example story
