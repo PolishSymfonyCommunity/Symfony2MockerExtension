@@ -141,7 +141,7 @@ namespace PSS\Features\Context;
 use Behat\Behat\Context\BehatContext;
 use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerContext;
 
-class AcmeContext extends RawServiceMockerContext
+class FeatureContext extends RawServiceMockerContext
 {
     /**
      * @return null
@@ -167,7 +167,7 @@ use it internally in other steps:
  */
 public function theContactRequestShouldBeSentToCrm()
 {
-    return new Then(sprintf('the "%s" service should meet my expectations', 'crm.client'));
+    return new Then('the "crm.client" service should meet my expectations');
 }
 ```
 
@@ -221,7 +221,7 @@ class AcmeContext extends RawServiceMockerContext
      */
     public function theContactRequestShouldBeSentToCrm()
     {
-        return new Then(sprintf('the "%s" service should meet my expectations', 'crm.client'));
+        return new Then('the "crm.client" service should meet my expectations');
     }
 }
 ```
