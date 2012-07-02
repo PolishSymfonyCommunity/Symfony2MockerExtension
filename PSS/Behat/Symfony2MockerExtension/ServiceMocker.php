@@ -74,6 +74,21 @@ class ServiceMocker
     }
 
     /**
+     * @param integer $serviceId
+     *
+     * @throws \Behat\Mink\Exception\ExpectationException
+     *
+     * @return null
+     */
+    public function verifyServiceExpectationsById($serviceId)
+    {
+        $container = $this->getMockerContainer();
+        $service = $container->get($serviceId);
+
+        $this->verifyServiceExpectations($service);
+    }
+
+    /**
      * @throws \LogicException when used with not supporteddriver or container cannot create mocks
      *
      * @return \Symfony\Component\DependencyInjection\Container
