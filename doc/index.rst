@@ -89,9 +89,9 @@ The base container class for the test environment needs to be replaced in
             return parent::getContainerBaseClass();
         }
 
-.. note::
+    .. note::
 
-    Don't forget to clear your cache.
+        Don't forget to clear your cache.
 
 Usage
 -----
