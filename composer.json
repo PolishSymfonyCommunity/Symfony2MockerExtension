@@ -32,6 +32,6 @@
         "polishsymfonycommunity/symfony-mocker-container": "*"
     },
     "autoload": {
-        "psr-0": { "PSS\\Behat\\Symfony2MockerExtension": "" }
+        "psr-0": { "PSS\\Behat\\Symfony2MockerExtension": "src/" }
     }
 }
