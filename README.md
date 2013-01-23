@@ -9,4 +9,4 @@ Internally it uses [Mockery](https://github.com/padraic/mockery) and
 
 ## Documentation
 
-[Official documentation](http://github.com/PolishSymfonyCommunity/Symfony2MockerExtension/tree/master/doc/index.rst)
+[Official documentation](http://extensions.behat.org/symfony2-mocker/)
