@@ -7,6 +7,13 @@ injection container.
 Internally it uses `Mockery <https://github.com/padraic/mockery>`_ and
 `SymfonyMockerContainer <https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer>`_.
 
+    .. note::
+
+        Mocking services in acceptance tests is not always the best option, 
+        but sometimes it is a necessity. Especially, if we don't have a possibility to use
+        the service in a test mode to prevent interactions with the production environment.
+
+
 Installation
 ------------
 
@@ -106,6 +113,9 @@ services:
 Implementing the ServiceMockerAwareInterface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Implement ``PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerAwareInterface``
+and mocker will be injected into your context automatically:
+
     .. code-block:: php
 
         <?php
@@ -146,13 +156,16 @@ Implementing the ServiceMockerAwareInterface
 Extending the RawServiceMockerContext
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Alternatively, extend the ``PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker``
+and call the mocker with the ``mockService()`` method:
+
     .. code-block:: php
 
         <?php
 
         namespace PSS\Features\Context;
 
-        use PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker
+        use PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker;
 
         class AcmeContext extends RawServiceMockerContext
         {
@@ -217,6 +230,8 @@ time you'd want to use it internally in other steps:
 Example story
 -------------
 
+Imagine you're working on a following feature:
+
     .. code-block:: yaml
 
         Feature: Submitting contact request form
@@ -232,6 +247,9 @@ Example story
              And CRM API is available
              And I submit the contact us form
             Then the contact request should be sent to the CRM
+
+You probably wouldn't like your CRM API to be hit every time scenarios are run.
+One way of solving this issue is to mock the service and only verify if it was called:
 
     .. code-block:: php
 
