@@ -1,7 +1,7 @@
 {
     "name": "polishsymfonycommunity/symfony2-mocker-extension",
     "description": "Behat extension for mocking services defined in the Symfony2 dependency injection container.",
-    "keywords": ["behat", "mockery", "mock", "bdd", "tdd", "test"],
+    "keywords": ["behat", "prophecy", "mock", "bdd", "tdd", "test"],
     "homepage": "http://symfonylab.pl",
     "license": "MIT",
     "authors": [
@@ -11,27 +11,40 @@
             "homepage": "http://www.zalas.eu"
         },
         {
+            "name": "Kacper Gunia",
+            "email": "cakper@gmail.com",
+            "homepage": "http://cakper.net/"
+        },
+        {
             "name": "Polish Symfony Community",
             "homepage": "http://symfonylab.pl"
         }
     ],
     "require": {
-        "php":                          ">=5.3.2",
+        "php": ">=5.3.2",
 
-        "behat/behat":                  ">=2.4",
-        "behat/mink":                   ">=1.4",
-        "behat/symfony2-extension":     "*",
+        "behat/behat": ">=2.4",
+        "behat/mink": ">=1.4",
+        "behat/symfony2-extension": "*",
 
-        "symfony/config":               "*",
+        "symfony/config": "*",
         "symfony/dependency-injection": "*",
-        "symfony/event-dispatcher":     "*",
-        "symfony/http-kernel":          "*",
+        "symfony/event-dispatcher": "*",
+        "symfony/http-kernel": "*",
 
-        "mockery/mockery":              ">=0.7.0",
+        "phpspec/prophecy": ">=1.0.0",
 
         "polishsymfonycommunity/symfony-mocker-container": "*"
     },
+    "require-dev": {
+        "phpspec/phpspec": "2.0.*@dev"
+    },
     "autoload": {
-        "psr-0": { "PSS\\Behat\\Symfony2MockerExtension": "src/" }
+        "psr-0": {
+            "PSS\\Behat\\Symfony2MockerExtension": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
     }
 }
