@@ -37,7 +37,8 @@
         "polishsymfonycommunity/symfony-mocker-container": "*"
     },
     "require-dev": {
-        "phpspec/phpspec": "2.0.*@dev"
+        "phpspec/phpspec": "2.0.*@dev",
+        "behat/mink-browserkit-driver": "*"
     },
     "autoload": {
         "psr-0": {

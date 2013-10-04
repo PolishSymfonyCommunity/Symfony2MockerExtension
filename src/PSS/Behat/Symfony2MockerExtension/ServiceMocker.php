@@ -4,35 +4,34 @@ namespace PSS\Behat\Symfony2MockerExtension;
 
 use Behat\Mink\Mink;
 use Behat\Symfony2Extension\Driver\KernelDriver;
+use Prophecy\Prophet;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class ServiceMocker
 {
     /**
-     * @var \Symfony\Component\HttpKernel\KernelInterface $kernel
+     * @var KernelInterface|null
      */
     private $kernel = null;
 
     /**
-     * @var \Behat\Mink\Mink $mink
+     * @var Mink|null
      */
     private $mink = null;
 
     /**
-     * @param \Symfony\Component\HttpKernel\KernelInterface $kernel
-     * @param \Behat\Mink\Mink                              $mink
-     *
-     * @return null
+     * @param KernelInterface $kernel
+     * @param Mink            $mink
      */
     public function __construct(KernelInterface $kernel, Mink $mink)
     {
         $this->kernel = $kernel;
-        $this->mink = $mink;
+        $this->mink   = $mink;
     }
 
     /**
-     * @return \Mockery\Mock
+     * @return \Prophecy\Prophet
      */
     public function mockService()
     {
@@ -40,60 +39,10 @@ class ServiceMocker
     }
 
     /**
-     * @return null
+     * @return MockerContainer
+     * @throws \LogicException when used with not supported driver or container cannot create mocks
      */
-    public function verifyPendingExpectations()
-    {
-        if (!$this->isKernelDriverUsed()) {
-            return;
-        }
-
-        $container = $this->getMockerContainer();
-        $mockedServices = $container->getMockedServices();
-
-        foreach ($mockedServices as $id => $service) {
-            $this->verifyServiceExpectations($service);
-            $container->unmock($id);
-        }
-    }
-
-    /**
-     * @param object $service
-     *
-     * @throws \Behat\Mink\Exception\ExpectationException
-     *
-     * @return null
-     */
-    public function verifyServiceExpectations($service)
-    {
-        try {
-            $service->mockery_verify();
-        } catch (CountValidatorException $exception) {
-            throw new ExpectationException('One of the expected services was not called', $this->mink->getSession(), $exception);
-        }
-    }
-
-    /**
-     * @param integer $serviceId
-     *
-     * @throws \Behat\Mink\Exception\ExpectationException
-     *
-     * @return null
-     */
-    public function verifyServiceExpectationsById($serviceId)
-    {
-        $container = $this->getMockerContainer();
-        $service = $container->get($serviceId);
-
-        $this->verifyServiceExpectations($service);
-    }
-
-    /**
-     * @throws \LogicException when used with not supporteddriver or container cannot create mocks
-     *
-     * @return \Symfony\Component\DependencyInjection\Container
-     */
-    protected function getMockerContainer()
+    public function getMockerContainer()
     {
         if ($this->isKernelDriverUsed()) {
             $container = $this->kernel->getContainer();
@@ -116,5 +65,44 @@ class ServiceMocker
         $driver = $this->mink->getSession()->getDriver();
 
         return $driver instanceof KernelDriver;
+    }
+
+    /**
+     * @param string $serviceId
+     *
+     * @throws ExpectationException
+     */
+    public function verifyServiceExpectationsById($serviceId)
+    {
+        $container = $this->getMockerContainer();
+        $service   = $container->get($serviceId);
+
+        $this->verifyServiceExpectations($service);
+    }
+
+    /**
+     * @param Prophet $service
+     */
+    public function verifyServiceExpectations(Prophet $service)
+    {
+        $service->checkPredictions();
+    }
+
+    /**
+     * @return null
+     */
+    public function verifyPendingExpectations()
+    {
+        if (!$this->isKernelDriverUsed()) {
+            return;
+        }
+
+        $container      = $this->getMockerContainer();
+        $mockedServices = $container->getMockedServices();
+
+        foreach ($mockedServices as $id => $service) {
+            $this->verifyServiceExpectations($service);
+            $container->unmock($id);
+        }
     }
 }
