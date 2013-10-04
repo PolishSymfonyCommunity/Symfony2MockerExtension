@@ -7,9 +7,9 @@ use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
 interface ServiceMockerAwareInterface
 {
     /**
-     * @param \PSS\Behat\Symfony2MockerExtension\ServiceMocker $serviceMocker
+     * @param ServiceMocker $serviceMocker
      *
-     * @return null
+     * @return mixed
      */
     public function setServiceMocker(ServiceMocker $serviceMocker);
 }
