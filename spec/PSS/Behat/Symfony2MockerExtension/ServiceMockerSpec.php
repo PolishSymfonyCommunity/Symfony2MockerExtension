@@ -76,14 +76,14 @@ class ServiceMockerSpec extends ObjectBehavior
         $this->verifyPendingExpectations();
     }
 
-    function it_proxy_mocks_to_container(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer, Prophet $service)
+    function it_proxy_mocks_to_container(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer)
     {
         $mink->getSession()->willReturn($session);
         $session->getDriver()->willreturn($driver);
         $kernel->getContainer()->willReturn($mockerContainer);
 
-        $mockerContainer->mock('service_id', $service)->shouldBeCalled();
+        $mockerContainer->mock('service_id', '\StdClass')->shouldBeCalled();
 
-        $this->mockService('service_id', $service);
+        $this->mockService('service_id', '\StdClass');
     }
 }
