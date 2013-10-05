@@ -5,7 +5,6 @@ namespace PSS\Behat\Symfony2MockerExtension;
 use Behat\Mink\Mink;
 use Behat\Symfony2Extension\Driver\KernelDriver;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophet;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -32,11 +31,14 @@ class ServiceMocker
     }
 
     /**
-     * @return \Prophecy\Prophet
+     * @param string $id               Service Id
+     * @param string $classOrInterface Class or Interface name
+     *
+     * @return ObjectProphecy
      */
-    public function mockService()
+    public function mockService($id, $classOrInterface)
     {
-        return call_user_func_array(array($this->getMockerContainer(), 'mock'), func_get_args());
+        return $this->getMockerContainer()->mock($id, $classOrInterface);
     }
 
     /**
@@ -70,8 +72,6 @@ class ServiceMocker
 
     /**
      * @param string $serviceId
-     *
-     * @throws ExpectationException
      */
     public function verifyServiceExpectationsById($serviceId)
     {
@@ -82,7 +82,7 @@ class ServiceMocker
     }
 
     /**
-     * @param Prophet $service
+     * @param ObjectProphecy $service
      */
     public function verifyServiceExpectations(ObjectProphecy $service)
     {
