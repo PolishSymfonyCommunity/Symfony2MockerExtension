@@ -4,6 +4,7 @@ namespace PSS\Behat\Symfony2MockerExtension;
 
 use Behat\Mink\Mink;
 use Behat\Symfony2Extension\Driver\KernelDriver;
+use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -83,9 +84,9 @@ class ServiceMocker
     /**
      * @param Prophet $service
      */
-    public function verifyServiceExpectations(Prophet $service)
+    public function verifyServiceExpectations(ObjectProphecy $service)
     {
-        $service->checkPredictions();
+        $service->checkProphecyMethodsPredictions();
     }
 
     /**

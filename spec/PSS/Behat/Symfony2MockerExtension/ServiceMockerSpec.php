@@ -7,6 +7,7 @@ use Behat\Mink\Session;
 use Behat\Symfony2Extension\Driver\KernelDriver;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Component\DependencyInjection\Container;
@@ -47,7 +48,7 @@ class ServiceMockerSpec extends ObjectBehavior
         $this->shouldThrow($logicException)->duringGetMockerContainer();
     }
 
-    function it_verifies_service_expectation_by_id(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer, Prophet $service)
+    function it_verifies_service_expectation_by_id(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer, ObjectProphecy $service)
     {
         $mink->getSession()->willReturn($session);
         $session->getDriver()->willreturn($driver);
@@ -56,10 +57,10 @@ class ServiceMockerSpec extends ObjectBehavior
 
         $this->verifyServiceExpectationsById('service_id');
 
-        $service->checkPredictions()->shouldHaveBeenCalled();
+        $service->checkProphecyMethodsPredictions()->shouldHaveBeenCalled();
     }
 
-    function it_verifies_all_pending_expectations(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer, Prophet $service1, Prophet $service2)
+    function it_verifies_all_pending_expectations(KernelInterface $kernel, Mink $mink, Session $session, KernelDriver $driver, MockerContainer $mockerContainer, ObjectProphecy $service1, ObjectProphecy $service2)
     {
         $services = array('service1' => $service1, 'service2' => $service2);
 
@@ -70,8 +71,8 @@ class ServiceMockerSpec extends ObjectBehavior
 
         $mockerContainer->unmock('service1')->shouldBeCalled();
         $mockerContainer->unmock('service2')->shouldBeCalled();
-        $service1->checkPredictions()->shouldBeCalled();
-        $service2->checkPredictions()->shouldBeCalled();
+        $service1->checkProphecyMethodsPredictions()->shouldBeCalled();
+        $service2->checkProphecyMethodsPredictions()->shouldBeCalled();
 
         $this->verifyPendingExpectations();
     }
