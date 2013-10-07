@@ -14,6 +14,17 @@ class RawServiceMockerContext extends BehatContext implements ServiceMockerAware
     private $serviceMocker = null;
 
     /**
+     * @param $id               Service Id
+     * @param $classOrInterface Class or Interface name
+     *
+     * @return ObjectProphecy
+     */
+    public function mockService($id, $classOrInterface)
+    {
+        return $this->serviceMocker->mockService($id, $classOrInterface);
+    }
+
+    /**
      * @return ServiceMocker
      */
     protected function getServiceMocker()
@@ -27,16 +38,5 @@ class RawServiceMockerContext extends BehatContext implements ServiceMockerAware
     public function setServiceMocker(ServiceMocker $serviceMocker)
     {
         $this->serviceMocker = $serviceMocker;
-    }
-
-    /**
-     * @param $id               Service Id
-     * @param $classOrInterface Class or Interface name
-     *
-     * @return ObjectProphecy
-     */
-    public function mockService($id, $classOrInterface)
-    {
-        return $this->serviceMocker->mockService($id, $classOrInterface);
     }
 }

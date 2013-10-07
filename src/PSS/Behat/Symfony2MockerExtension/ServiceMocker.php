@@ -4,8 +4,7 @@ namespace PSS\Behat\Symfony2MockerExtension;
 
 use Behat\Mink\Mink;
 use Behat\Symfony2Extension\Driver\KernelDriver;
-use Prophecy\Prophecy\ObjectProphecy;
-use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
+use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class ServiceMocker
@@ -34,7 +33,7 @@ class ServiceMocker
      * @param string $id               Service Id
      * @param string $classOrInterface Class or Interface name
      *
-     * @return ObjectProphecy
+     * @return object
      */
     public function mockService($id, $classOrInterface)
     {
@@ -42,7 +41,7 @@ class ServiceMocker
     }
 
     /**
-     * @return MockerContainer
+     * @return MockerContainerInterface
      * @throws \LogicException when used with not supported driver or container cannot create mocks
      */
     public function getMockerContainer()
@@ -50,7 +49,7 @@ class ServiceMocker
         if ($this->isKernelDriverUsed()) {
             $container = $this->kernel->getContainer();
 
-            if (!$container instanceof MockerContainer) {
+            if (!$container instanceof MockerContainerInterface) {
                 throw new \LogicException('Container is not able to mock the services');
             }
 
@@ -71,25 +70,6 @@ class ServiceMocker
     }
 
     /**
-     * @param string $serviceId
-     */
-    public function verifyServiceExpectationsById($serviceId)
-    {
-        $container = $this->getMockerContainer();
-        $service   = $container->get($serviceId);
-
-        $this->verifyServiceExpectations($service);
-    }
-
-    /**
-     * @param ObjectProphecy $service
-     */
-    public function verifyServiceExpectations(ObjectProphecy $service)
-    {
-        $service->checkProphecyMethodsPredictions();
-    }
-
-    /**
      * @return null
      */
     public function verifyPendingExpectations()
@@ -101,9 +81,17 @@ class ServiceMocker
         $container      = $this->getMockerContainer();
         $mockedServices = $container->getMockedServices();
 
-        foreach ($mockedServices as $id => $service) {
-            $this->verifyServiceExpectations($service);
+        foreach (array_keys($mockedServices) as $id) {
+            $this->verifyServiceExpectationsById($id);
             $container->unmock($id);
         }
+    }
+
+    /**
+     * @param string $serviceId
+     */
+    public function verifyServiceExpectationsById($serviceId)
+    {
+        $this->getMockerContainer()->verifyServiceExpectationsById($serviceId);
     }
 }
