@@ -32,12 +32,12 @@
         "symfony/event-dispatcher": "*",
         "symfony/http-kernel": "*",
 
-        "phpspec/prophecy": ">=1.0.0",
-
-        "polishsymfonycommunity/symfony-mocker-container": "*"
+        "polishsymfonycommunity/symfony-mocker-container": "~2.0.0"
     },
     "require-dev": {
         "phpspec/phpspec": "2.0.*@dev",
+        "phpspec/prophecy": ">=1.0.0",
+        "mockery/mockery":  ">=0.7.0",
         "behat/mink-browserkit-driver": "*"
     },
     "autoload": {
