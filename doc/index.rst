@@ -54,7 +54,7 @@ The easiest way to keep your suite updated is to use `Composer <http://getcompos
             "require": {
                 ...
 
-                "polishsymfonycommunity/symfony2-mocker-extension": "~2.0.0",
+                "polishsymfonycommunity/symfony2-mocker-extension": ">=1.1.0",
                 "phpspec/prophecy":                                 ">=1.0.0", // For Prophecy integration
                 "mockery/mockery":                                  ">=0.7.0"  // For Mockery integration
             }
