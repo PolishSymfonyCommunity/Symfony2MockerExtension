@@ -14,8 +14,8 @@ class RawServiceMockerContext extends BehatContext implements ServiceMockerAware
     private $serviceMocker = null;
 
     /**
-     * @param $id               Service Id
-     * @param $classOrInterface Class or Interface name
+     * @param string $id               Service Id
+     * @param string $classOrInterface Class or Interface name
      *
      * @return ObjectProphecy
      */

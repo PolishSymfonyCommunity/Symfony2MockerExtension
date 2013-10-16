@@ -8,8 +8,6 @@ interface ServiceMockerAwareInterface
 {
     /**
      * @param ServiceMocker $serviceMocker
-     *
-     * @return mixed
      */
     public function setServiceMocker(ServiceMocker $serviceMocker);
 }
