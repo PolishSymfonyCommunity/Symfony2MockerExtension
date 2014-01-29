@@ -9,22 +9,23 @@ use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerAwareInterface;
 class RawServiceMockerContext extends BehatContext implements ServiceMockerAwareInterface
 {
     /**
-     * @var \PSS\Behat\Symfony2MockerExtension\ServiceMocker $serviceMocker
+     * @var ServiceMocker $serviceMocker
      */
     private $serviceMocker = null;
 
     /**
-     * @param \PSS\Behat\Symfony2MockerExtension\ServiceMocker $serviceMocker
+     * @param string $id               Service Id
+     * @param string $classOrInterface Class or Interface name
      *
-     * @return null
+     * @return ObjectProphecy
      */
-    public function setServiceMocker(ServiceMocker $serviceMocker)
+    public function mockService($id, $classOrInterface)
     {
-        $this->serviceMocker = $serviceMocker;
+        return $this->serviceMocker->mockService($id, $classOrInterface);
     }
 
     /**
-     * @return \PSS\Behat\Symfony2MockerExtension\ServiceMocker
+     * @return ServiceMocker
      */
     protected function getServiceMocker()
     {
@@ -32,10 +33,10 @@ class RawServiceMockerContext extends BehatContext implements ServiceMockerAware
     }
 
     /**
-     * @return \Mockery\Mock
+     * @param ServiceMocker $serviceMocker
      */
-    protected function mockService()
+    public function setServiceMocker(ServiceMocker $serviceMocker)
     {
-        return call_user_func_array(array($this->serviceMocker, 'mockService'), func_get_args());
+        $this->serviceMocker = $serviceMocker;
     }
 }

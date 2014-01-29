@@ -4,12 +4,12 @@ Symfony2 Mocker Extension
 Behat extension for mocking services defined in the Symfony2 dependency
 injection container.
 
-Internally it uses `Mockery <https://github.com/padraic/mockery>`_ and
-`SymfonyMockerContainer <https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer>`_.
+Internally it uses `SymfonyMockerContainer <https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer>`_
+and `Prophecy <https://github.com/phpspec/prophecy>`_ or `Mockery <https://github.com/padraic/mockery>`_.
 
     .. note::
 
-        Mocking services in acceptance tests is not always the best option, 
+        Mocking services in acceptance tests is not always the best option,
         but sometimes it is a necessity. Especially, if we don't have a possibility to use
         the service in a test mode to prevent interactions with the production environment.
 
@@ -46,7 +46,7 @@ Through Composer
 
 The easiest way to keep your suite updated is to use `Composer <http://getcomposer.org>`_:
 
-1. Define the dependencies in your `composer.json`:
+1. Choose and define the dependencies in your `composer.json`:
 
     .. code-block:: js
 
@@ -54,7 +54,9 @@ The easiest way to keep your suite updated is to use `Composer <http://getcompos
             "require": {
                 ...
 
-                "polishsymfonycommunity/symfony2-mocker-extension": "*"
+                "polishsymfonycommunity/symfony2-mocker-extension": ">=1.1.0",
+                "phpspec/prophecy":                                 ">=1.0.0", // For Prophecy integration
+                "mockery/mockery":                                  ">=0.7.0"  // For Mockery integration
             }
         }
 
@@ -90,7 +92,8 @@ The base container class for the test environment needs to be replaced in
         protected function getContainerBaseClass()
         {
             if ('test' == $this->environment) {
-                return '\PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer';
+                return '\PSS\SymfonyMockerContainer\DependencyInjection\ProphecyContainer'; // For Prophecy integration
+//              return '\PSS\SymfonyMockerContainer\DependencyInjection\MockeryContainer';  // For Mockery integration
             }
 
             return parent::getContainerBaseClass();
@@ -146,10 +149,10 @@ and mocker will be injected into your context automatically:
              */
             public function crmApiIsAvailable()
             {
+                // All mock examples are using Prophecy
                 $this->mocker->mockService('crm.client', 'PSS\Crm\Client')
-                    ->shouldReceive('send')
-                    ->once()
-                    ->andReturn(true);
+                    ->send()
+                    ->willReturn(true);
             }
         }
 
@@ -175,9 +178,8 @@ and call the mocker with the ``mockService()`` method:
             public function crmApiIsAvailable()
             {
                 $this->mockService('crm.client', 'PSS\Crm\Client')
-                    ->shouldReceive('send')
-                    ->once()
-                    ->andReturn(true);
+                    ->send()
+                    ->willReturn(true);
             }
         }
 
@@ -269,9 +271,8 @@ One way of solving this issue is to mock the service and only verify if it was c
             {
                 $this->getMainContext()->getSubContext('container')
                     ->mockService('crm.client', 'PSS\Crm\Client')
-                    ->shouldReceive('send')
-                    ->once()
-                    ->andReturn(true);
+                    ->send()
+                    ->willReturn(true);
             }
 
             /**

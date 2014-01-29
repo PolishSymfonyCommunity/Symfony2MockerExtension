@@ -4,21 +4,22 @@ namespace PSS\Behat\Symfony2MockerExtension\Context\Initializer;
 
 use Behat\Behat\Context\Initializer\InitializerInterface;
 use Behat\Behat\Context\ContextInterface;
+use Behat\Behat\Event\OutlineEvent;
+use Behat\Behat\Event\ScenarioEvent;
 use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
 use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerAwareInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ServiceMockerInitializer implements InitializerInterface, EventSubscriberInterface
 {
     /**
-     * @var \PSS\Behat\Symfony2MockerExtension\ServiceMocker $serviceMocker
+     * @var ServiceMocker $serviceMocker
      */
     private $serviceMocker = null;
 
     /**
-     * @param \PSS\Behat\Symfony2MockerExtension\ServiceMocker $serviceMocker
-     *
-     * @return null
+     * @param ServiceMocker $serviceMocker
      */
     public function __construct(ServiceMocker $serviceMocker)
     {
@@ -26,7 +27,18 @@ class ServiceMockerInitializer implements InitializerInterface, EventSubscriberI
     }
 
     /**
-     * @param \Behat\Behat\Context\ContextInterface $context
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            'afterScenario'       => 'verifyPendingExpectations',
+            'afterOutlineExample' => 'verifyPendingExpectations'
+        );
+    }
+
+    /**
+     * @param ContextInterface $context
      *
      * @return boolean
      */
@@ -40,9 +52,7 @@ class ServiceMockerInitializer implements InitializerInterface, EventSubscriberI
     }
 
     /**
-     * @param Behat\Behat\Context\ContextInterface $context
-     *
-     * @return null
+     * @param ContextInterface $context
      */
     public function initialize(ContextInterface $context)
     {
@@ -50,22 +60,9 @@ class ServiceMockerInitializer implements InitializerInterface, EventSubscriberI
     }
 
     /**
-     * @return array
+     * @param ScenarioEvent|OutlineEvent $event
      */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            'afterScenario' => 'verifyPendingExpectations',
-            'afterOutlineExample' => 'verifyPendingExpectations'
-        );
-    }
-
-    /**
-     * @param \Behat\Behat\Event\ScenarioEvent|\Behat\Behat\Event\OutlineEvent $event
-     *
-     * @return null
-     */
-    public function verifyPendingExpectations($event)
+    public function verifyPendingExpectations(Event $event)
     {
         $this->serviceMocker->verifyPendingExpectations();
     }
