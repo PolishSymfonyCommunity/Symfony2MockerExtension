@@ -40,7 +40,7 @@ class ServiceMockerInitializer implements InitializerInterface, EventSubscriberI
     /**
      * @param ContextInterface $context
      *
-     * @return bool
+     * @return boolean
      */
     public function supports(ContextInterface $context)
     {
@@ -61,8 +61,6 @@ class ServiceMockerInitializer implements InitializerInterface, EventSubscriberI
 
     /**
      * @param ScenarioEvent|OutlineEvent $event
-     *
-     * @return null
      */
     public function verifyPendingExpectations(Event $event)
     {

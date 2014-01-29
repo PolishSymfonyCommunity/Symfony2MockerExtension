@@ -28,8 +28,8 @@ class ServiceMockerInitializerSpec extends ObjectBehavior
 
     function it_verifies_expectations(Event $event, ServiceMocker $serviceMocker)
     {
+        $serviceMocker->verifyPendingExpectations()->shouldBeCalled();
         $this->verifyPendingExpectations($event);
-        $serviceMocker->verifyPendingExpectations()->shouldHaveBeenCalled();
     }
 
     function it_supports_service_mocker_aware_context(ServiceMockerAwareContext $context)
@@ -44,8 +44,8 @@ class ServiceMockerInitializerSpec extends ObjectBehavior
 
     function it_initialises_context_with_service_mocker(ServiceMockerAwareContext $context, ServiceMocker $serviceMocker)
     {
+        $context->setServiceMocker($serviceMocker)->shouldBeCalled();
         $this->initialize($context);
-        $context->setServiceMocker($serviceMocker)->shouldHaveBeenCalled();
     }
 }
 

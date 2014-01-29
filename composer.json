@@ -1,7 +1,7 @@
 {
     "name": "polishsymfonycommunity/symfony2-mocker-extension",
     "description": "Behat extension for mocking services defined in the Symfony2 dependency injection container.",
-    "keywords": ["behat", "prophecy", "mock", "bdd", "tdd", "test"],
+    "keywords": ["behat", "prophecy", "mockery", "mock", "bdd", "tdd", "test"],
     "homepage": "http://symfonylab.pl",
     "license": "MIT",
     "authors": [
@@ -39,6 +39,10 @@
         "phpspec/prophecy": ">=1.0.0",
         "mockery/mockery":  ">=0.7.0",
         "behat/mink-browserkit-driver": "*"
+    },
+    "suggest": {
+        "phpspec/prophecy": "Enables Prophecy mocking framework",
+        "mockery/mockery": "Enables Mockery framework"
     },
     "autoload": {
         "psr-0": {
