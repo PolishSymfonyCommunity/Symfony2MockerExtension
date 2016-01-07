@@ -2,26 +2,29 @@
 
 namespace PSS\Behat\Symfony2MockerExtension;
 
+use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Mink;
 use Behat\Symfony2Extension\Driver\KernelDriver;
+use Mockery\Mock;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class ServiceMocker
 {
     /**
-     * @var \Symfony\Component\HttpKernel\KernelInterface $kernel
+     * @var KernelInterface $kernel
      */
     private $kernel = null;
 
     /**
-     * @var \Behat\Mink\Mink $mink
+     * @var Mink $mink
      */
     private $mink = null;
 
     /**
-     * @param \Symfony\Component\HttpKernel\KernelInterface $kernel
-     * @param \Behat\Mink\Mink                              $mink
+     * @param KernelInterface $kernel
+     * @param Mink            $mink
      *
      * @return null
      */
@@ -32,7 +35,7 @@ class ServiceMocker
     }
 
     /**
-     * @return \Mockery\Mock
+     * @return Mock
      */
     public function mockService()
     {
@@ -60,7 +63,7 @@ class ServiceMocker
     /**
      * @param object $service
      *
-     * @throws \Behat\Mink\Exception\ExpectationException
+     * @throws ExpectationException
      *
      * @return null
      */
@@ -76,7 +79,7 @@ class ServiceMocker
     /**
      * @param integer $serviceId
      *
-     * @throws \Behat\Mink\Exception\ExpectationException
+     * @throws ExpectationException
      *
      * @return null
      */
@@ -89,9 +92,9 @@ class ServiceMocker
     }
 
     /**
-     * @throws \LogicException when used with not supporteddriver or container cannot create mocks
+     * @return Container
      *
-     * @return \Symfony\Component\DependencyInjection\Container
+     * @throws \LogicException when used with not supporteddriver or container cannot create mocks
      */
     protected function getMockerContainer()
     {

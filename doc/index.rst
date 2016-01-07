@@ -4,6 +4,10 @@ Symfony2 Mocker Extension
 Behat extension for mocking services defined in the Symfony2 dependency
 injection container.
 
+**Use it sparingly. Mocking a service container is not a good practice.
+Most of the time if there's a need for this,
+the problem can be better solved by improving the design instead.**
+
 Internally it uses `Mockery <https://github.com/padraic/mockery>`_ and
 `SymfonyMockerContainer <https://github.com/PolishSymfonyCommunity/SymfonyMockerContainer>`_.
 
@@ -19,60 +23,28 @@ Installation
 
 This extension requires:
 
-* Behat 2.4+
+* Behat 3.0+
 
-Through PHAR
-~~~~~~~~~~~~
-
-First, download phar archives:
-
-* `behat.phar <http://behat.org/downloads/behat.phar>`_ - Behat itself
-* `symfony2_mocker_extension.phar <http://behat.org/downloads/symfony2_mocker_extension.phar>`_
-  - Symfony2 mocker extension
-
-After downloading and placing ``*.phar`` into project directory, you need to
-activate ``Symfony2MockerExtension`` in your ``behat.yml``:
-
-    .. code-block:: yaml
-
-        default:
-          # ...
-          extensions:
-            symfony2_mocker_extension.phar: ~
-
-
-Through Composer
-~~~~~~~~~~~~~~~~
-
-The easiest way to keep your suite updated is to use `Composer <http://getcomposer.org>`_:
-
-1. Define the dependencies in your `composer.json`:
-
-    .. code-block:: js
-
-        {
-            "require": {
-                ...
-
-                "polishsymfonycommunity/symfony2-mocker-extension": "*"
-            }
-        }
-
-2. Install/update your vendors:
+1. Install the extension:
 
     .. code-block:: bash
 
-        $ curl http://getcomposer.org/installer | php
-        $ php composer.phar install
+        $ composer require polishsymfonycommunity/symfony2-mocker-extension
 
-3. Activate the extension in your ``behat.yml``:
+2. Activate it in ``behat.yml``:
 
     .. code-block:: yaml
 
         default:
             # ...
+
             extensions:
-                PSS\Behat\Symfony2MockerExtension\Extension: ~
+                Behat\MinkExtension:
+                    sessions:
+                        default:
+                            symfony2: ~
+                Behat\Symfony2Extension: ~
+                PSS\Behat\Symfony2MockerExtension: ~
 
 Enabling the mocker container
 -----------------------------
@@ -103,42 +75,26 @@ The base container class for the test environment needs to be replaced in
 Usage
 -----
 
-There are three ways you can use ``ServiceMocker`` in your contexts to mock
-services:
-
-* Implement the ``ServiceMockerAwareInterface``
-* Extend the ``RawServiceMockerContext``
-* Use ``ServiceMockerContext``
-
-Implementing the ServiceMockerAwareInterface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Implement ``PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerAwareInterface``
-and mocker will be injected into your context automatically:
+Simply add the ``ServiceMocker`` to the list of constructor arguments in the context file:
 
     .. code-block:: php
 
-        <?php
-
-        namespace PSS\Features\Context;
-
-        use Behat\Behat\Context\BehatContext;
-        use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerAwareInterface;
+        use Behat\Behat\Context\Context;
         use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
 
-        class AcmeContext extends BehatContext implements ServiceMockerAwareInterface
+        final class FeatureContext implements Context
         {
             /**
-             * @var ServiceMocker $mocker
+             * @var ServiceMocker
              */
-            private $mocker = null;
+            private $serviceMocker;
 
             /**
-             * @param ServiceMocker $mocker
+             * @param ServiceMocker $serviceMocker
              */
-            public function setServiceMocker(ServiceMocker $mocker)
+            public function __construct(ServiceMocker $serviceMocker)
             {
-                $this->mocker = $mocker;
+                $this->serviceMocker = $serviceMocker;
             }
 
             /**
@@ -151,80 +107,6 @@ and mocker will be injected into your context automatically:
                     ->once()
                     ->andReturn(true);
             }
-        }
-
-Extending the RawServiceMockerContext
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Alternatively, extend the ``PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker``
-and call the mocker with the ``mockService()`` method:
-
-    .. code-block:: php
-
-        <?php
-
-        namespace PSS\Features\Context;
-
-        use PSS\Behat\Symfony2MockerExtension\Context\RawServiceMocker;
-
-        class AcmeContext extends RawServiceMockerContext
-        {
-            /**
-             * @Given /^CRM API is available$/
-             */
-            public function crmApiIsAvailable()
-            {
-                $this->mockService('crm.client', 'PSS\Crm\Client')
-                    ->shouldReceive('send')
-                    ->once()
-                    ->andReturn(true);
-            }
-        }
-
-Using ServiceMockerContext
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Extending ``ServiceMockerContext`` is not recommended as it can only be extend
-once.
-
-Most of the time you'd rather want to include it as a subcontext:
-
-    .. code-block:: php
-
-        <?php
-
-        namespace PSS\Features\Context;
-
-        use Behat\Behat\Context\BehatContext;
-        use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerContext;
-
-        class FeatureContext extends RawServiceMockerContext
-        {
-            /**
-             * @return null
-             */
-            public function __construct()
-            {
-                $this->useContext('service_mocker', new ServiceMockerContext());
-            }
-        }
-
-``ServiceMockerContext`` can be used just like ``RawServiceMockerContext`` but
-it additionally provides a step to verify Mockery expectations. Most of the
-time you'd want to use it internally in other steps:
-
-    .. code-block:: php
-
-        <?php
-
-        /**
-         * @Given /^(the )?contact request should be sent to (the )?CRM$/
-         *
-         * @return null
-         */
-        public function theContactRequestShouldBeSentToCrm()
-        {
-            return new Then('the "crm.client" service should meet my expectations');
         }
 
 Example story
@@ -257,17 +139,30 @@ One way of solving this issue is to mock the service and only verify if it was c
 
         namespace PSS\Features\Context;
 
-        use Behat\Behat\Context\BehatContext;
-        use PSS\Behat\Symfony2MockerExtension\Context\ServiceMockerContext;
+        use Behat\Behat\Context\Context;
+        use PSS\Behat\Symfony2MockerExtension\ServiceMocker;
 
-        class AcmeContext extends RawServiceMockerContext
+        class AcmeContext implements Context
         {
+            /**
+             * @var ServiceMocker
+             */
+            private $serviceMocker;
+
+            /**
+             * @param ServiceMocker $serviceMocker
+             */
+            public function __construct(ServiceMocker $serviceMocker)
+            {
+                $this->serviceMocker = $serviceMocker;
+            }
+
             /**
              * @Given /^CRM API is available$/
              */
             public function crmApiIsAvailable()
             {
-                $this->getMainContext()->getSubContext('container')
+                $this->serviceMocker
                     ->mockService('crm.client', 'PSS\Crm\Client')
                     ->shouldReceive('send')
                     ->once()
@@ -279,7 +174,7 @@ One way of solving this issue is to mock the service and only verify if it was c
              */
             public function theContactRequestShouldBeSentToCrm()
             {
-                return new Then('the "crm.client" service should meet my expectations');
+                $this->serviceMocker->verifyServiceExpectationsById('crm.client');
             }
         }
 

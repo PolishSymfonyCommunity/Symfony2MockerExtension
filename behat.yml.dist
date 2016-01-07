@@ -1,0 +1,24 @@
+default:
+    gherkin:
+        filters:
+            tags: "~@wip"
+    suites:
+        default:
+            contexts:
+                - FeatureContext:
+                     kernel: @kernel
+    formatters:
+        pretty: ~
+
+    extensions:
+        Behat\MinkExtension:
+            sessions:
+                default:
+                    symfony2: ~
+        Behat\Symfony2Extension:
+            kernel:
+                class: TestKernel
+                env: test
+                debug: true
+                path: features/bootstrap/TestKernel.php
+        PSS\Behat\Symfony2MockerExtension: ~
