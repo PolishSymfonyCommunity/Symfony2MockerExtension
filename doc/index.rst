@@ -19,7 +19,7 @@ Installation
 
 This extension requires:
 
-* Behat 2.4+
+* Behat 2.4 or 2.5
 
 Through PHAR
 ~~~~~~~~~~~~

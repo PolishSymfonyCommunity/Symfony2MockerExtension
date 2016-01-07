@@ -18,7 +18,7 @@
     "require": {
         "php":                          ">=5.3.2",
 
-        "behat/behat":                  ">=2.4",
+        "behat/behat":                  "2.4.* || 2.5.*",
         "behat/mink":                   ">=1.4",
         "behat/symfony2-extension":     "*",
 
