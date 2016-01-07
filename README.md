@@ -1,6 +1,8 @@
 ﻿Symfony2 Mocker Extension
 =========================
 
+[![Build Status](https://travis-ci.org/PolishSymfonyCommunity/Symfony2MockerExtension.svg)](https://travis-ci.org/PolishSymfonyCommunity/Symfony2MockerExtension)
+
 Behat extension for mocking services defined in the Symfony2 dependency
 injection container.
 
