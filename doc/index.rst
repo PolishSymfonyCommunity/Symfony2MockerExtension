@@ -102,7 +102,7 @@ Simply add the ``ServiceMocker`` to the list of constructor arguments in the con
              */
             public function crmApiIsAvailable()
             {
-                $this->mocker->mockService('crm.client', 'PSS\Crm\Client')
+                $this->serviceMocker->mockService('crm.client', 'PSS\Crm\Client')
                     ->shouldReceive('send')
                     ->once()
                     ->andReturn(true);
