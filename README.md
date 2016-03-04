@@ -6,7 +6,7 @@
 Behat extension for mocking services defined in the Symfony2 dependency
 injection container.
 
-**This bundle was always a hack. For a better approach try https://github.com/docteurklein/TestDoubleBundle.**
+**This extension was always a hack. For a better approach try https://github.com/docteurklein/TestDoubleBundle.**
 
 **Use it sparingly. Mocking a service container is not a good practice.
 Most of the time if there's a need for this,
